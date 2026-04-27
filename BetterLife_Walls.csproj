@@ -36,6 +36,15 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Inspectors\**" />
+	  <Compile Remove="Patcher\**" />
+	  <EmbeddedResource Remove="Inspectors\**" />
+	  <EmbeddedResource Remove="Patcher\**" />
+	  <None Remove="Inspectors\**" />
+	  <None Remove="Patcher\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Compile Remove="autoSign.cs" />
 	  <Compile Remove="BetterLifesMachineDef.cs" />
 	  <Compile Remove="blZipperCommandsProcessor.cs" />
@@ -44,14 +53,12 @@
 	  <Compile Remove="blZipperSetPriorityPortsCmd.cs" />
 	  <Compile Remove="btBalancer.cs" />
 	  <Compile Remove="ConsCubesHelper.cs" />
-	  <Compile Remove="Inspectors\vehInspector.cs" />
 	  <Compile Remove="ioPortTemplates.cs" />
 	  <Compile Remove="MafiEntityMassPlacer.cs" />
 	  <Compile Remove="MafiEntityToolbox.cs" />
 	  <Compile Remove="MafiZipper.cs" />
 	  <Compile Remove="MafiZipperInspector.cs" />
 	  <Compile Remove="MafiZipperMb.cs" />
-	  <Compile Remove="Patcher\VehiclePatcher.cs" />
 	  <Compile Remove="ProductColorManager.cs" />
 	  <Compile Remove="Products.cs" />
 	  <Compile Remove="RoadEntity.cs" />
@@ -342,11 +349,6 @@
 		<!-- Use different location for asset bundles -->
 		<AssetBundles Include="D:\Modding\CaptainOfIndustry\BetterLife_Walls_Unity\AssetBundles\**\*" Exclude="**\AssetBundles;**\AssetBundles.manifest" />
 		<!--<AssetBundles Include="$(ProjectDir)..\$(UnityProjectName)\AssetBundles\**\*" Exclude="**\AssetBundles;**\AssetBundles.manifest" />-->
-	</ItemGroup>
-  
-	<ItemGroup>
-	  <Folder Include="Inspectors\" />
-	  <Folder Include="Patcher\" />
 	</ItemGroup>
 
 	<!-- Coppies data for next use special settings in Unity project the DLLs are specified in manifest file. -->

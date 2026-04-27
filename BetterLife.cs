@@ -125,12 +125,12 @@ namespace BetterLife_Walls
 
         public void Initialize(DependencyResolver resolver, bool gameWasLoaded)
         {
-            GameWasLoaded = gameWasLoaded;
-            Option<InputScheduler> isc = resolver.GetResolvedInstance<InputScheduler>();
-            if (isc.HasValue)
-            {
-                //isc.Value.ScheduleInputCmd<GameConsoleCmd>(new GameConsoleCmd("also_log_to_console"));
-            }
+            //GameWasLoaded = gameWasLoaded;
+            //Option<InputScheduler> isc = resolver.GetResolvedInstance<InputScheduler>();
+            //if (isc.HasValue)
+            //{
+            //    //isc.Value.ScheduleInputCmd<GameConsoleCmd>(new GameConsoleCmd("also_log_to_console"));
+            //}
             //Option<ProtosDb> protosDb = resolver.GetResolvedInstance<ProtosDb>();
 
             ////IEnumerable<blZipperProto> myProtos = protosDb.Value.All<blZipperProto>();
