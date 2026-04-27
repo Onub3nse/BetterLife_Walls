@@ -1,0 +1,158 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: Mafi.Unity.Ui.Inspectors.ZipperInspector
+// Assembly: Mafi.Unity, Version=0.7.6.0, Culture=neutral, PublicKeyToken=null
+// MVID: A07A6678-BE21-4AB8-B581-BCE01AC48D67
+// Assembly location: F:\Games\SteamLibrary\steamapps\common\Captain of Industry\Captain of Industry_Data\Managed\Mafi.Unity.dll
+// XML documentation location: F:\Games\SteamLibrary\steamapps\common\Captain of Industry\Captain of Industry_Data\Managed\Mafi.Unity.xml
+
+using lae0f0tqVus72X2rSY;
+using Mafi.Collections;
+using Mafi.Collections.ImmutableCollections;
+using Mafi.Core;
+using Mafi.Core.Factory.Zippers;
+using Mafi.Core.Ports.Io;
+using Mafi.Core.Syncers;
+using Mafi.Localization;
+using Mafi.Unity.Camera;
+using Mafi.Unity.Ui.Library;
+using Mafi.Unity.Ui.Library.Inspectors;
+using Mafi.Unity.UiToolkit;
+using Mafi.Unity.UiToolkit.Component;
+using Mafi.Unity.UiToolkit.Library;
+using System;
+using System.Linq;
+using BetterLife.RoadsAndSigns;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+#nullable disable
+namespace Mafi.Unity.Ui.Inspectors
+{
+    [GlobalDependency(RegistrationMode.AsAllInterfaces, false, false)]
+
+    internal class blZipperInspector : BaseInspector<blZipper>, IDisposable
+    {
+        private static readonly Vector2 MAX_POS;
+        private readonly int m_maxPortsCount;
+        private readonly CameraController m_cameraController;
+        private readonly UnityEngine.Camera m_zipperViewCamera;
+        private readonly RenderTexture m_zipperViewRenderTexture;
+        private readonly ImmutableArray<UiComponent> m_portNumberPanels;
+
+        public blZipperInspector(UiContext context) : base(context)
+        {
+            this.EmbedStatusToTheTop();
+            this.WindowSize(600.px(), Px.Auto);
+            this.m_cameraController = this.Context.CameraController;
+            this.m_maxPortsCount = this.Context.ProtosDb.All<blZipperProto>().Max<blZipperProto>((Func<blZipperProto, int>)(x => x.Ports.Length));
+            this.m_zipperViewRenderTexture = new RenderTexture(420, 420, 32);
+            this.m_zipperViewCamera = new GameObject("ZipperCamera").AddComponent<UnityEngine.Camera>();
+            this.m_zipperViewCamera.enabled = false;
+            this.m_zipperViewCamera.clearFlags = CameraClearFlags.Color;
+            this.m_zipperViewCamera.backgroundColor = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+            this.m_zipperViewCamera.fieldOfView = 10f;
+            this.m_zipperViewCamera.nearClipPlane = 45f;
+            this.m_zipperViewCamera.farClipPlane = 65f;
+            this.m_zipperViewCamera.cullingMask = Layer.Unity00Default.ToMask();
+            this.m_zipperViewCamera.targetTexture = this.m_zipperViewRenderTexture;
+            this.m_zipperViewCamera.useOcclusionCulling = false;
+            UiComponent[] uiComponentArray = new UiComponent[2];
+            Mafi.Unity.UiToolkit.Library.Column component1 = new Mafi.Unity.UiToolkit.Library.Column();
+            component1.Add<Mafi.Unity.UiToolkit.Library.Column>((Action<Mafi.Unity.UiToolkit.Library.Column>)(c => c.StyleGroup<Mafi.Unity.UiToolkit.Library.Column>()));
+            Img child1;
+            Img img1 = child1 = new Img((Texture)this.m_zipperViewRenderTexture).Size<Img>(420.px()).AlignSelfCenter<Img>();
+            component1.Add((UiComponent)child1);
+            uiComponentArray[0] = (UiComponent)component1;
+            uiComponentArray[1] = (UiComponent)new PanelFooterRow().BodyAdd((Action<Mafi.Unity.UiToolkit.Library.Row>)(c => c.JustifyItemsSpaceAround<Mafi.Unity.UiToolkit.Library.Row>()), (UiComponent)new Mafi.Unity.UiToolkit.Library.Toggle(true).Label<Mafi.Unity.UiToolkit.Library.Toggle>((LocStrFormatted)Tr.BalancerRatios__Inputs).Tooltip<Mafi.Unity.UiToolkit.Library.Toggle>(new LocStrFormatted?((LocStrFormatted)Tr.BalancerRatios__InputsTooltip)).OnValueChanged((Action<bool>)(isOn => this.ScheduleCommand<ZipperSetForceEvenInputsCmd>(new ZipperSetForceEvenInputsCmd(this.Entity.Id, isOn)))).ObserveValue<Mafi.Unity.UiToolkit.Library.Toggle>((Func<bool>)(() => this.Entity.ForceEvenInputs)), (UiComponent)new VerticalDivider(), (UiComponent)new Mafi.Unity.UiToolkit.Library.Toggle(true).Label<Mafi.Unity.UiToolkit.Library.Toggle>((LocStrFormatted)Tr.BalancerRatios__Outputs).Tooltip<Mafi.Unity.UiToolkit.Library.Toggle>(new LocStrFormatted?((LocStrFormatted)Tr.BalancerRatios__Tooltip)).OnValueChanged((Action<bool>)(isOn => this.ScheduleCommand<ZipperSetForceEvenOutputsCmd>(new ZipperSetForceEvenOutputsCmd(this.Entity.Id, isOn)))).ObserveValue<Mafi.Unity.UiToolkit.Library.Toggle>((Func<bool>)(() => this.Entity.ForceEvenOutputs)));
+            this.AddPanelWithHeader(uiComponentArray).Title((LocStrFormatted)Tr.BalancerPrioritization__Title, (LocStrFormatted)Tr.BalancerPrioritization__Tooltip);
+            LystStruct<UiComponent> lystStruct = new LystStruct<UiComponent>();
+            for (int index = 0; index < this.m_maxPortsCount; ++index)
+            {
+                int capturedI = index;
+                Img img2 = img1;
+                ButtonRow child2 = new ButtonRow(Mafi.Unity.UiToolkit.Library.Button.General);
+                child2.Add((UiComponent)new Icon("Assets/Unity/UserInterface/General/Priority.svg").Size<Icon>(14.px()));
+                child2.Add((UiComponent)new Mafi.Unity.UiToolkit.Library.Label((LocStrFormatted)Tr.Priority).FontSize<Mafi.Unity.UiToolkit.Library.Label>(9).UpperCase().MarginRight<Mafi.Unity.UiToolkit.Library.Label>((Px)4));
+                Mafi.Unity.UiToolkit.Library.Label component2 = new Mafi.Unity.UiToolkit.Library.Label().PaddingLeftRight<Mafi.Unity.UiToolkit.Library.Label>(2.pt()).Background<Mafi.Unity.UiToolkit.Library.Label>(new ColorRgba?(Theme.BackgroundDark)).Border<Mafi.Unity.UiToolkit.Library.Label>(1.px(), new ColorRgba?(Theme.BorderColor)).BorderBottom<Mafi.Unity.UiToolkit.Library.Label>(0.px()).BorderRadiusTop<Mafi.Unity.UiToolkit.Library.Label>(4).Height<Mafi.Unity.UiToolkit.Library.Label>(22.px()).FontSize<Mafi.Unity.UiToolkit.Library.Label>(12).TextCenterMiddle<Mafi.Unity.UiToolkit.Library.Label>();
+                Px? top = new Px?(-22.px());
+                Px? right = new Px?(2.px());
+                Px? bottom = new Px?();
+                Px? left = new Px?();
+                Mafi.Unity.UiToolkit.Library.Label child3;
+                Mafi.Unity.UiToolkit.Library.Label ioLabel = child3 = component2.AbsolutePosition<Mafi.Unity.UiToolkit.Library.Label>(top, right, bottom, left);
+                child2.Add((UiComponent)child3);
+                ButtonRow btn = img2.AddAndReturn<ButtonRow>(child2).Translate<ButtonRow>(-50.Percent(), 50.Percent()).Toggleable<ButtonRow>().PaddingLeftRight<ButtonRow>(6.px());
+                lystStruct.Add((UiComponent)btn);
+                btn.OnClick<ButtonRow>((Action)(() => this.ScheduleCommand<ZipperSetPriorityPortsCmd>(new ZipperSetPriorityPortsCmd(this.Entity.Id, this.Entity.Ports[capturedI].Name, new bool?()))));
+                btn.Observe<bool>((Func<bool>)(() => capturedI < this.Entity.Ports.Length && this.Entity.Ports[capturedI].IsConnected)).Observe<bool>((Func<bool>)(() => capturedI < this.Entity.Ports.Length && this.Entity.IsPortPrioritizedArray[capturedI])).Observe<bool>((Func<bool>)(() => capturedI < this.Entity.Ports.Length && this.Entity.Ports[capturedI].IsConnectedAsInput)).Do((Action<bool, bool, bool>)((isConnected, isPrioritized, isInput) =>
+                {
+                    if (isConnected)
+                    {
+                        ioLabel.Value<Mafi.Unity.UiToolkit.Library.Label>((LocStrFormatted)(isInput ? Tr.IoLabel__IN : Tr.IoLabel__OUT));
+                        ioLabel.Color<Mafi.Unity.UiToolkit.Library.Label>(new ColorRgba?(isInput ? Theme.PositiveColor : Theme.DangerColor));
+                    }
+                    ioLabel.Visible<Mafi.Unity.UiToolkit.Library.Label>(isConnected);
+                    btn.Selected<ButtonRow>(isPrioritized);
+                }));
+            }
+            this.m_portNumberPanels = lystStruct.ToImmutableArray();
+        }
+
+        protected override void OnActivated()
+        {
+            base.OnActivated();
+            int length = this.Entity.Ports.Length;
+            for (int index = 0; index < this.m_maxPortsCount; ++index)
+                this.m_portNumberPanels[index].Visible<UiComponent>(index < length);
+            this.m_zipperViewCamera.enabled = true;
+        }
+
+        protected override void OnDeactivated()
+        {
+            base.OnDeactivated();
+            this.m_zipperViewCamera.enabled = false;
+        }
+
+        protected override void RenderUpdate(GameTime gameTime)
+        {
+            base.RenderUpdate(gameTime);
+            blZipper entity = this.Entity;
+            if (!this.m_zipperViewCamera.enabled || entity == null)
+                return;
+            Vector3 vector3 = entity.Position3f.ToVector3();
+            this.m_zipperViewCamera.transform.localRotation = this.m_cameraController.Camera.transform.localRotation;
+            this.m_zipperViewCamera.transform.localPosition = vector3 - this.m_zipperViewCamera.transform.forward * 55f;
+            int index = 0;
+            ImmutableArray<IoPort> ports = this.Entity.Ports;
+            for (int length = ports.Length; index < length; ++index)
+            {
+                ports = this.Entity.Ports;
+                Vector2 vector2 = Vector2.Max(Vector2.zero, Vector2.Min((Vector2)this.m_zipperViewCamera.WorldToScreenPoint(ports[index].ExpectedConnectedPortCoord.ToCenterVector3()), blZipperInspector.MAX_POS));
+                UiComponent portNumberPanel1 = this.m_portNumberPanels[index];
+                vector2 = new Vector2((float)vector2.x.RoundToInt(), (float)vector2.y.RoundToInt());
+                StyleLength styleLength = portNumberPanel1.RootElement.style.left;
+                if (styleLength.value.value.IsNear(vector2.x, 0.5f))
+                {
+                    styleLength = portNumberPanel1.RootElement.style.bottom;
+                    if (styleLength.value.value.IsNear(vector2.y, 0.5f))
+                        continue;
+                }
+                UiComponent portNumberPanel2 = this.m_portNumberPanels[index];
+                Px? nullable1 = new Px?(vector2.x.px());
+                Px? nullable2 = new Px?(vector2.y.px());
+                Px? top = new Px?();
+                Px? right = new Px?();
+                Px? bottom = nullable2;
+                Px? left = nullable1;
+                portNumberPanel2.AbsolutePosition<UiComponent>(top, right, bottom, left);
+            }
+        }
+
+        public void Dispose() => this.m_zipperViewRenderTexture.DestroyIfNotNull();
+
+        static blZipperInspector()
+        {
+            blZipperInspector.MAX_POS = new Vector2(420f, 420f);
+        }
+    }
+}

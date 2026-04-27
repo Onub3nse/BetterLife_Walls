@@ -1,0 +1,12 @@
+﻿{
+	"id": "BetterLife_Walls",
+	"version": "0.7.0",
+	"primary_dlls": [ "0Harmony.dll", "BetterLife_Walls.dll" ],
+	"non_locking_dll_load": true,
+	"can_add_to_saved_game": true,
+	"authors": "MaViTTo",
+	"description_short": "Retaining Walls",
+	"description_long": "Retaining walls, more to come...",
+	"display_name": "BeTTerLife: Retaining Walls"
+
+}
