@@ -25,9 +25,8 @@ using UnityEngine;
 //using static UnityEngine.UI.Image;
 namespace BetterLife_Walls
 {
-    public sealed class BetterLife : IDisposable, IMod, IModConfig
+    public sealed class BetterLife_Walls : IDisposable, IMod, IModConfig
     {
-        public readonly Harmony HarmonyInstance;
         private ModManifest manifest;
 
         public ModManifest Manifest
@@ -57,14 +56,14 @@ namespace BetterLife_Walls
         {
             get
             {
-                return typeof(BetterLife).Assembly.GetName().Version;
+                return typeof(BetterLife_Walls).Assembly.GetName().Version;
             }
         }
         public string Name
         {
             get
             {
-                return typeof(BetterLife).Assembly.GetName().Name;
+                return typeof(BetterLife_Walls).Assembly.GetName().Name;
             }
         }
 
@@ -74,7 +73,7 @@ namespace BetterLife_Walls
         {
             get
             {
-                return typeof(BetterLife).Assembly.GetName().Version.Major * 100 + typeof(BetterLife).Assembly.GetName().Version.Minor * 10 + typeof(BetterLife).Assembly.GetName().Version.Build;
+                return typeof(BetterLife_Walls).Assembly.GetName().Version.Major * 100 + typeof(BetterLife_Walls).Assembly.GetName().Version.Minor * 10 + typeof(BetterLife_Walls).Assembly.GetName().Version.Build;
             }
         }
 
@@ -87,7 +86,7 @@ namespace BetterLife_Walls
             }
         }
 
-        public BetterLife(ModManifest modManifest)
+        public BetterLife_Walls(ModManifest modManifest)
 
         {
             this.manifest = modManifest;
@@ -99,17 +98,19 @@ namespace BetterLife_Walls
         {
             ProtosDb prototypesDb = registrator.PrototypesDb;
 
-            ToolbarCategoryProto toolbarParent = prototypesDb.Add<ToolbarCategoryProto>(new ToolbarCategoryProto(BetterLIDs.ToolBars.toolWallsParent, Proto.CreateStr(BetterLIDs.ToolBars.toolWallsParent, "Retaining Walls"), 110f, "Assets/BetterLife/Icons/Toolbar/Walls.png", false, "RETAINING WALLS", null, null, null));
-            Proto.ID protoToolbarWalls1 = BetterLIDs.ToolBars.toolWall1;
-            Proto.Str str1 = Proto.CreateStr(BetterLIDs.ToolBars.toolWall1, "Retaining Walls", "", null);
-
-            ToolbarCategoryProto parentCategory1 = toolbarParent;
-            prototypesDb.Add<ToolbarCategoryProto>(new ToolbarCategoryProto(protoToolbarWalls1, str1, 110f, "Assets/BetterLife/Icons/Toolbar/Walls.png", false, "", null, null, parentCategory1));
+            ToolbarCategoryProto toolbarParent = new ToolbarCategoryProto(BetterLIDs.ToolBars.toolWallsParent, Proto.CreateStr(BetterLIDs.ToolBars.toolWallsParent, "Retaining Walls"), 110f, "Assets/BetterLife/IconsWalls/Toolbar_Walls/toolbar_Walls.png", false,"", null, null, null);
+            ToolbarCategoryProto toolbarLegacy = new ToolbarCategoryProto(BetterLIDs.ToolBars.toolWallLegacy, Proto.CreateStr(BetterLIDs.ToolBars.toolWallLegacy, "Legacy", null, null), 110f, "Assets/BetterLife/IconsWalls/Toolbar_Walls/toolbar_legacywalls.png", false, "", null, null, toolbarParent);
+            ToolbarCategoryProto toolbarExtended = new ToolbarCategoryProto(BetterLIDs.ToolBars.toolWallExtended, Proto.CreateStr(BetterLIDs.ToolBars.toolWallExtended, "Extended", null, null), 110f, "Assets/BetterLife/IconsWalls/Toolbar_Walls/toolbar_extendedwalls.png", false, "", null, null, toolbarParent);
+            ToolbarCategoryProto toolbarSeaWalls = new ToolbarCategoryProto(BetterLIDs.ToolBars.toolWallSeaWalls, Proto.CreateStr(BetterLIDs.ToolBars.toolWallSeaWalls, "Sea Walls", null, null), 110f, "TODO", false, "", null, null, toolbarParent);
+            prototypesDb.Add<ToolbarCategoryProto>(toolbarParent, false);
+            prototypesDb.Add<ToolbarCategoryProto>(toolbarLegacy, false);
+            prototypesDb.Add<ToolbarCategoryProto>(toolbarExtended, false);
+            prototypesDb.Add<ToolbarCategoryProto>(toolbarSeaWalls, false);
 
             registrator.RegisterData<retainingWalls>();
 
             registrator.RegisterDataWithInterface<IResearchNodesData>();
-
+             
         }
         public bool GameWasLoaded;
         private bool disposedValue;
@@ -117,7 +118,7 @@ namespace BetterLife_Walls
         public void RegisterDependencies(DependencyResolverBuilder depBuilder, ProtosDb protosDb, bool gameWasLoaded)
 
         {
-
+ 
  
 
 
@@ -125,39 +126,7 @@ namespace BetterLife_Walls
 
         public void Initialize(DependencyResolver resolver, bool gameWasLoaded)
         {
-            //GameWasLoaded = gameWasLoaded;
-            //Option<InputScheduler> isc = resolver.GetResolvedInstance<InputScheduler>();
-            //if (isc.HasValue)
-            //{
-            //    //isc.Value.ScheduleInputCmd<GameConsoleCmd>(new GameConsoleCmd("also_log_to_console"));
-            //}
-            //Option<ProtosDb> protosDb = resolver.GetResolvedInstance<ProtosDb>();
 
-            ////IEnumerable<blZipperProto> myProtos = protosDb.Value.All<blZipperProto>();
-            //IEnumerable<blZipperProto> myProtos = protosDb.Value.All<blZipperProto>();
-
-            //foreach (blZipperProto proto in myProtos)
-            //{
-            //    if (proto.Strings.Name.ToString().Contains("Balancer"))
-            //    {
-            //        ImmutableArray<IoPortTemplate> ioPortTemplate = proto.Ports;
-            //        foreach (IoPortTemplate port in ioPortTemplate)
-            //        {
-            //            var disconnectedField1 = port.Shape.Graphics.GetType().GetField("DisconnectedPortPrefabPath", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-            //            var connectedField1 = port.Shape.Graphics.GetType().GetField("ConnectedPortPrefabPath", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-            //            var disconnectedField2 = port.Shape.Graphics.GetType().GetField("DisconnectedPortPrefabPathLod3", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-            //            var connectedField2 = port.Shape.Graphics.GetType().GetField("ConnectedPortPrefabPathLod3", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public);
-            //            var graphics1 = port.Shape.Graphics;
-            //            disconnectedField1.SetValue(graphics1, "Assets/BetterLife/Transports/ports/port.prefab");
-            //            connectedField1.SetValue(graphics1, "Assets/BetterLife/Transports/ports/port.prefab");
-            //            disconnectedField2.SetValue(graphics1, "Assets/BetterLife/Transports/ports/port.prefab");
-            //            connectedField2.SetValue(graphics1, "Assets/BetterLife/Transports/ports/port.prefab");
-
-            //        }
-
-            //    }
-
-            //}
         }
 
 

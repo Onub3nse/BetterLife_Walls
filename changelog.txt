@@ -1,0 +1,13 @@
+BetterLife - Walls
+
+	1.0.0 Initial release.
+
+	1.0.1 Removed harmony since it is not needed.
+
+	1.0.2 Switched recipe from using Cement to using Concrete Slaps for building the Walls.
+
+	1.0.3 Minor fixes.
+
+	1.0.4 Added a Gate, decorative, no retaining wall functionality.
+
+	1.0.5 Thanks for your feedbacks!!! Max height of walls set to 3, but can go a bit more. Walls can be placed inside ocean.

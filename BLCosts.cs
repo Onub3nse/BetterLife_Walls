@@ -81,7 +81,7 @@ namespace BetterLife_Walls
             {
                 get
                 {
-                    return BLCosts.Build.MaintenanceT1(0).Priority(8).Workers(0).Product(5, Ids.Products.Cement);
+                    return BLCosts.Build.MaintenanceT1(0).Priority(8).Workers(0).Product(5, Ids.Products.ConcreteSlab);
                 }
             }
         }

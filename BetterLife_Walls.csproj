@@ -61,6 +61,7 @@
 	  <Compile Remove="MafiZipperMb.cs" />
 	  <Compile Remove="ProductColorManager.cs" />
 	  <Compile Remove="Products.cs" />
+	  <Compile Remove="ReflectionExtensions.cs" />
 	  <Compile Remove="RoadEntity.cs" />
 	  <Compile Remove="TerrainDef.cs" />
 	  <Compile Remove="transPORT.cs" />
@@ -68,6 +69,10 @@
 	  <Compile Remove="transPortController.cs" />
 	  <Compile Remove="transTeleport.cs" />
 	  <Compile Remove="utility.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="0Harmony.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -340,24 +345,22 @@
 	</Target>
 
 	<ProjectExtensions>
-		<VisualStudio>
-			<UserProperties manifest_1json__JsonSchema="manifest.schema.json" config_1json__JsonSchema="config.schema.json" />
-		</VisualStudio>
+		<VisualStudio><UserProperties manifest_1json__JsonSchema="manifest.schema.json" /></VisualStudio>
 	</ProjectExtensions>
-  
+   
 	<ItemGroup Condition=" '$(ProjectDir)' != '*Undefined*' ">
 		<!-- Use different location for asset bundles -->
 		<AssetBundles Include="D:\Modding\CaptainOfIndustry\BetterLife_Walls_Unity\AssetBundles\**\*" Exclude="**\AssetBundles;**\AssetBundles.manifest" />
 		<!--<AssetBundles Include="$(ProjectDir)..\$(UnityProjectName)\AssetBundles\**\*" Exclude="**\AssetBundles;**\AssetBundles.manifest" />-->
 	</ItemGroup>
-
+ 
 	<!-- Coppies data for next use special settings in Unity project the DLLs are specified in manifest file. -->
 	<Target Name="CopyDllsToUnityProject" AfterTargets="PostBuildEvent" Condition=" '$(ProjectDir)' != '*Undefined*' ">
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ProjectDir)..\$(UnityProjectName)\Assets\Dlls\" />
 		<Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(ProjectDir)..\$(UnityProjectName)\Assets\Dlls\" />
 		<Copy SourceFiles="$(TargetDir)$(TargetName).xml" DestinationFolder="$(ProjectDir)..\$(UnityProjectName)\Assets\Dlls\" Condition="$(Configuration)==Release" />
 	</Target>
-
+   
 	<!-- Coppies data to mod release folder. For skipping the part, comment out the full target element -->
 	<Target Name="DeployToModsFolder" AfterTargets="PostBuildEvent" Condition=" '$(DeployToModsFolder)' == 'true' AND '$(ProjectDir)' != '*Undefined*' ">
 		<Copy SourceFiles="$(ProjectDir)\manifest.json" DestinationFolder="$(COI_MODS)\$(TargetName)\" />
